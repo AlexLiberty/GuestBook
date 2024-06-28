@@ -41,12 +41,20 @@ namespace GuestBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.Password == model.ConfirmPassword)
+                if (model.Password != model.ConfirmPassword)
                 {
-                    await _userRepository.RegisterUser(model.Email, model.Name, model.Password);
-                    return RedirectToAction("Login");
+                    ModelState.AddModelError("", "Passwords do not match.");
+                    return View(model);
                 }
-                ModelState.AddModelError("", "Passwords do not match.");
+
+                if (await _userRepository.UserExists(model.Email))
+                {
+                    ModelState.AddModelError("", "Email already registered.");
+                    return View(model);
+                }
+
+                await _userRepository.RegisterUser(model.Email, model.Name, model.Password);
+                return RedirectToAction("Login");
             }
             return View(model);
         }

@@ -42,5 +42,10 @@ namespace GuestBook.Repository
             }
             return null;
         }
+
+        public async Task<bool> UserExists(string email)
+        {
+            return await _context.Users.AnyAsync(u => u.Email == email);
+        }
     }
 }
