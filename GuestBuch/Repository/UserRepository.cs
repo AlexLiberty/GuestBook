@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuestBook.Repository
 {
-    public class UserRepository : IRepository
+    public class UserRepository : IUserRepository
     {
         private readonly GuestBookContext _context;
 
@@ -46,6 +46,11 @@ namespace GuestBook.Repository
         public async Task<bool> UserExists(string email)
         {
             return await _context.Users.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            return await _context.Users.FindAsync(userId);
         }
     }
 }

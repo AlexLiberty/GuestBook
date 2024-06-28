@@ -1,21 +1,23 @@
-using Microsoft.AspNetCore.Mvc;
 using GuestBook.Models;
-using Microsoft.EntityFrameworkCore;
+using GuestBook.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GuestBook.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly GuestBookContext _context;
+        private readonly IUserRepository _userRepository;
+        private readonly IMessageRepository _messageRepository;
 
-        public HomeController(GuestBookContext context)
+        public HomeController(IUserRepository userRepository, IMessageRepository messageRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
+            _messageRepository = messageRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var messages = _context.Messages.Include(m => m.User).ToList();
+            var messages = await _messageRepository.GetMessagesWithUsers();
             return View(messages);
         }
 
@@ -25,13 +27,16 @@ namespace GuestBook.Controllers
             var userId = HttpContext.Session.GetString("UserId");
             if (userId != null)
             {
-                var message = new Message
+                var user = await _userRepository.GetUserById(int.Parse(userId));
+                if (user != null)
                 {
-                    UserId = int.Parse(userId),
-                    MessageText = messageText
-                };
-                _context.Messages.Add(message);
-                await _context.SaveChangesAsync();
+                    var message = new Message
+                    {
+                        UserId = user.Id,
+                        MessageText = messageText
+                    };
+                    await _messageRepository.AddMessage(message);
+                }
             }
             return RedirectToAction("Index");
         }
