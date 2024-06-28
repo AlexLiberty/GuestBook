@@ -8,9 +8,9 @@ namespace GuestBook.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserRepository _userRepository;
+        private readonly IRepository _userRepository;
 
-        public AccountController(UserRepository userRepository)
+        public AccountController(IRepository userRepository)
         {
             _userRepository = userRepository;
         }

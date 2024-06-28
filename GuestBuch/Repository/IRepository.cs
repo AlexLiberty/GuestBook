@@ -6,5 +6,6 @@ namespace GuestBook.Repository
     {
         Task RegisterUser(string email, string username, string password);
         Task<User> AuthorizeUser(string email, string password);
+        Task<bool> UserExists(string email);
     }
 }
