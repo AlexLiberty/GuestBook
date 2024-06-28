@@ -1,0 +1,25 @@
+﻿@model IEnumerable<GuestBook.Models.Message>
+
+@{
+    ViewData["Title"] = "Home Page";
+    var isAuthenticated = ViewContext.HttpContext.Session.GetString("UserId") != null;
+}
+
+<div>
+    <h1>Messages</h1>
+    @if (isAuthenticated)
+    {
+        <form method="post" asp-action="AddMessage">
+            <textarea class="mes" name="messageText" required></textarea>
+            <button type="submit" class="ddd2">Add Message</button>
+        </form>
+    }
+    <hr />
+    @foreach (var message in Model)
+    {
+        <div class="dispmes">
+            <p><strong>@message.User.Name</strong> (@message.Timestamp)</p>
+            <p>@message.MessageText</p>
+        </div><br>
+    }
+</div>
