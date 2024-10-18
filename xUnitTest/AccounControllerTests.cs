@@ -44,7 +44,7 @@ namespace xUnitTest
         public async Task LoginInvalidUserReturnsViewWithError()
         {
             // Arrange
-            var model = new LoginModel { Email = "test@example.com", Password = "wrongpassword" };
+            var model = new LoginModel { Email = "test@mail.com", Password = "wrongpassword" };
 
             _mockUserRepository.Setup(repo => repo.AuthorizeUser(model.Email, model.Password)).ReturnsAsync((User)null);
 
@@ -70,7 +70,7 @@ namespace xUnitTest
         public async Task Register_ValidModel_RedirectsToLogin()
         {
             // Arrange
-            var model = new RegistrationModel { Email = "newuser@example.com", Password = "password123", ConfirmPassword = "password123", Name = "New User" };
+            var model = new RegistrationModel { Email = "test@mail.com", Password = "password123", ConfirmPassword = "password123", Name = "New User" };
 
             _mockUserRepository.Setup(repo => repo.UserExists(model.Email)).ReturnsAsync(false);
             _mockUserRepository.Setup(repo => repo.RegisterUser(model.Email, model.Name, model.Password)).Returns(Task.CompletedTask);
@@ -87,7 +87,7 @@ namespace xUnitTest
         public async Task Register_ExistingEmail_ReturnsViewWithError()
         {
             // Arrange
-            var model = new RegistrationModel { Email = "existing@example.com", Password = "password123", ConfirmPassword = "password123", Name = "Existing User" };
+            var model = new RegistrationModel { Email = "test@mail.com", Password = "password123", ConfirmPassword = "password123", Name = "Existing User" };
 
             _mockUserRepository.Setup(repo => repo.UserExists(model.Email)).ReturnsAsync(true);
 
@@ -103,7 +103,7 @@ namespace xUnitTest
         public async Task Register_PasswordMismatch_ReturnsViewWithError()
         {
             // Arrange
-            var model = new RegistrationModel { Email = "newuser@example.com", Password = "password123", ConfirmPassword = "password456", Name = "New User" };
+            var model = new RegistrationModel { Email = "test@mail.com", Password = "password123", ConfirmPassword = "password456", Name = "New User" };
 
             // Act
             var result = await _controller.Register(model) as ViewResult;
